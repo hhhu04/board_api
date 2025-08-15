@@ -1,0 +1,50 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: board
+
+  datasource:
+    url: jdbc:log4jdbc:mysql://3.34.137.201:3306/board
+    username: root
+    password: 12345678
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    hikari:
+      maximum-pool-size: 3
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show-sql: false
+        format_sql: false
+
+logging:
+  level:
+    com:
+      zaxxer:
+        hikari: ERROR
+    javax:
+      sql:
+        DataSource: OFF
+    jdbc:
+      audit: OFF
+      resultset: OFF
+      result settable: info
+      sql only: false
+      sliding: OFF
+      connection: OFF
+    org:
+      hibernate:
+        SQL: ERROR
+        type:
+          descriptor:
+            sql:
+              BasicBinder: OFF
+
+common:
+  neople:
+    base-url: https://api.neople.co.kr
+    dnf: ${DNF}
+    cyphers: ${CYPHERS}
