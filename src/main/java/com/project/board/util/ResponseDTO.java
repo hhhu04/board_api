@@ -1,9 +1,6 @@
 package com.project.board.util;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
@@ -11,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @ToString
 public class ResponseDTO<T> {
-    String resultCode   = "SUCCESS";
+    boolean resultCode   = true;
     String message      = "성공";
     T object;
     int errorCode = 0;
@@ -21,14 +18,14 @@ public class ResponseDTO<T> {
     }
 
     public ResponseDTO(HttpStatus status, T object) {
-        this.resultCode = "Fail";
+        this.resultCode = false;
         this.message = "실패";
         this.object = object;
         this.errorCode = status.value();
     }
 
     public ResponseDTO(HttpStatus status, T object, String message) {
-        this.resultCode = "Fail";
+        this.resultCode = false;
         this.message = message;
         this.object = object;
         this.errorCode = status.value();
