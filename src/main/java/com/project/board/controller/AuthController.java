@@ -21,5 +21,16 @@ public class AuthController {
         return "test";
     }
 
+    @Auth(isOptional = true)
+    @GetMapping("/test2")
+    public String loginCheck2() {
+        return "test2";
+    }
+
+    @GetMapping("/test3")
+    public String loginCheck3() {
+        return "test3";
+    }
+
 
 }

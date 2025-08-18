@@ -14,10 +14,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User readUserByUserId(String userId);
 
-    @Query(value = "insert into token (user_idx, refresh_token, expire) values (:userIdx, :token, :expire)", nativeQuery = true)
-    @Modifying
-    void saveToken(@Param("userIdx") int userIdx, @Param("token") String token, @Param("expire") LocalDateTime expire);
-
-    @Query(value = "select exists( select refresh_token from token where user_idx = :userIdx and refresh_token = :token)", nativeQuery = true)
-    boolean existsToken(@Param("userIdx") String idx, @Param("token") String refreshToken);
 }
