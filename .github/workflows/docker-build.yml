@@ -33,6 +33,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/dev
 
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -46,6 +47,6 @@ jobs:
             DBPORT=${{ secrets.DBPORT }}
             DB=${{ secrets.DB }}
             USERNAME=${{ secrets.USERNAME }}
-            PASSWORD=${{ secrets.PASSWORD }}
-            SECRET=${{ secrets.SECRET }}
-            ISSUER=${{ secrets.ISSUER }}
+            DBPASSWORD=${{ secrets.PASSWORD }}
+            JWTSECRET=${{ secrets.SECRET }}
+            JWTISSUER=${{ secrets.ISSUER }}
