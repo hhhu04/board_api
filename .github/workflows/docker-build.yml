@@ -53,3 +53,5 @@ jobs:
             DBPASSWORD=${{ secrets.PASSWORD }}
             JWTSECRET=${{ secrets.SECRET }}
             JWTISSUER=${{ secrets.ISSUER }}
+            DNF=${{ secrets.DNF }}
+            CYPHERS=${{ secrets.CYPHERS }}
