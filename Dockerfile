@@ -10,5 +10,5 @@ COPY src src
 RUN chmod +x ./gradlew
 RUN ./gradlew clean bootJar
 
-EXPOSE 8080
+EXPOSE 8081
 ENTRYPOINT ["java", "-jar", "build/libs/board-api.jar"]
