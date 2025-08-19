@@ -14,7 +14,7 @@ spring:
   datasource:
     url: jdbc:log4jdbc:mysql://${DBHOST}:${DBPORT}/${DB}
     username: ${USERNAME}
-    password: ${PASSWORD}
+    password: ${DBPASSWORD}
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     hikari:
       maximum-pool-size: 3
@@ -51,8 +51,8 @@ logging:
 
 common:
   jwt:
-    secret: ${SECRET}
-    issuer: ${ISSUER}
+    secret: ${JWTSECRET}
+    issuer: ${JWTISSUER}
   neople:
     base-url: https://api.neople.co.kr
     dnf: ${DNF}
