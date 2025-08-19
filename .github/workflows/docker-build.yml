@@ -30,7 +30,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean bootWar
+        run: ./gradlew clean bootJar
 
       - name: Log in to Container Registry
         uses: docker/login-action@v3
