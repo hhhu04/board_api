@@ -12,7 +12,7 @@ spring:
     name: board
 
   datasource:
-    url: jdbc:log4jdbc:mysql://some-mysql:3306/${DB}
+    url: jdbc:log4jdbc:mysql://@some-mysql:3306/${DB}
     username: ${USERNAME}
     password: ${DBPASSWORD}
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
