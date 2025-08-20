@@ -131,17 +131,15 @@ jobs:
           -H "Content-Type: application/json" \
           -d "{\"fromImage\": \"${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev\"}")
           
+          URL=$(echo $RESPONSE | sed -n 's/.*URL:\([^|]*\)|.*/\1/p')
           HTTP_STATUS=$(echo $RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
           BODY=$(echo $RESPONSE | sed -e 's/HTTPSTATUS:.*//g')
           
+          echo "Request URL: $URL"
           echo "HTTP Status: $HTTP_STATUS"
           echo "Response: $BODY"
           
-          if [ $HTTP_STATUS -ge 400 ]; then
-          echo "❌ Failed to pull image, but continuing (container creation will auto-pull)"
-          else
-          echo "✅ Image pull initiated"
-          fi
+        
 
       - name: Create new container
         run: |
