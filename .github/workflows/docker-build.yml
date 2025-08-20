@@ -125,23 +125,22 @@ jobs:
         run: |
           echo "Pulling latest image..."
           
-          RESPONSE=$(curl -s -w "%{http_code}" \
-            -X POST "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/images/create" \
-            -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d "{\"fromImage\": \"${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev\"}")
+          RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" \
+          -X POST "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/images/create" \
+          -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d "{\"fromImage\": \"${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev\"}")
           
-          HTTP_CODE=${RESPONSE: -3}
-          BODY=${RESPONSE%???}
+          HTTP_STATUS=$(echo $RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          BODY=$(echo $RESPONSE | sed -e 's/HTTPSTATUS:.*//g')
           
-          echo "HTTP Code: $HTTP_CODE"
+          echo "HTTP Status: $HTTP_STATUS"
           echo "Response: $BODY"
           
-          if [ $HTTP_CODE -ge 400 ]; then
-            echo "❌ Failed to pull image"
-            exit 1
+          if [ $HTTP_STATUS -ge 400 ]; then
+          echo "❌ Failed to pull image, but continuing (container creation will auto-pull)"
           else
-            echo "✅ Image pull initiated"
+          echo "✅ Image pull initiated"
           fi
 
       - name: Create new container
