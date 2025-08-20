@@ -121,32 +121,6 @@ jobs:
             # 컨테이너가 이미 없을 수도 있으니 계속 진행
           fi
 
-      - name: Pull latest image (with error handling)
-        run: |
-          echo "Pulling latest image..."
-          
-          echo "${{ secrets.PORTAINERURL }}"
-          echo "${{ secrets.PORTAINERTOKEN }}"
-          echo "${{ env.REGISTRY }}"
-          echo "${{ env.IMAGE_NAME }}"
-          
-          
-          RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" \
-          -X POST "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/images/create" \
-          -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}" \
-          -H "Content-Type: application/json" \
-          -d "{\"fromImage\": \"${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev\"}")
-          
-          URL=$(echo $RESPONSE | sed -n 's/.*URL:\([^|]*\)|.*/\1/p')
-          HTTP_STATUS=$(echo $RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
-          BODY=$(echo $RESPONSE | sed -e 's/HTTPSTATUS:.*//g')
-          
-          echo "Request URL: $URL"
-          echo "HTTP Status: $HTTP_STATUS"
-          echo "Response: $BODY"
-          
-        
-
       - name: Create new container
         run: |
           echo "Creating new container with image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev"
@@ -159,7 +133,7 @@ jobs:
                 \"NetworkMode\": \"local\",
                 \"PortBindings\": {
                   \"8081/tcp\": [{\"HostPort\": \"8081\"}]
-                }
+                },
                 \"RestartPolicy\": {
                   \"Name\": \"unless-stopped\"
                 }
