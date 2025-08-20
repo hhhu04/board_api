@@ -31,4 +31,4 @@ RUN chmod +x ./gradlew
 RUN ./gradlew clean bootJar
 
 EXPOSE 8081
-ENTRYPOINT ["java", "-jar", "build/libs/board-api.jar"]
+ENTRYPOINT ["java","-Dspring.profiles.active=dev", "-jar", "build/libs/board-api.jar"]
