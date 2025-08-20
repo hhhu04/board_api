@@ -61,8 +61,8 @@ jobs:
         run: |
           CONTAINER_NAME="${{ github.event.repository.name }}"
           CONTAINER_ID=$(curl -s "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/json?all=true" \
-            -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}" | \
-            jq -r ".[] | select(.Names[] == \"/$CONTAINER_NAME\") | .Id")
+            -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}"  \
+            -r ".[] | select(.Names[] == \"/$CONTAINER_NAME\") | .Id")
           echo "container_id=$CONTAINER_ID" >> $GITHUB_OUTPUT
           echo "container_name=$CONTAINER_NAME" >> $GITHUB_OUTPUT
           echo "Found container ID: $CONTAINER_ID"
