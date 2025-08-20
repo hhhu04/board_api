@@ -65,37 +65,7 @@ jobs:
           # API 호출 및 JSON 파싱
           RESPONSE=$(curl -s "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/json?all=true" \
           -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}")
-          
-          echo "=== Debug: Raw API Response ==="
-          echo "$RESPONSE" | head -20
-          echo "================================"
-          
-          # JSON 유효성 검사
-          if echo "$RESPONSE" | jq empty 2>/dev/null; then
-          echo "✅ Valid JSON response"
-          
-          # 컨테이너 ID 추출 (안전한 방법)
-          CONTAINER_ID=$(echo "$RESPONSE" | jq -r '
-          .[] |
-          select(.Names[]? | test("^/'$CONTAINER_NAME'$")) |
-          .Id // empty
-          ' 2>/dev/null)
-          
-          # 결과 확인
-          if [ -z "$CONTAINER_ID" ] || [ "$CONTAINER_ID" = "null" ]; then
-          echo "No existing container found with name: $CONTAINER_NAME"
-          CONTAINER_ID=""
-          else
-          echo "Found container ID: $CONTAINER_ID"
-          fi
-          else
-          echo "❌ Invalid JSON or API error"
-          echo "Response: $RESPONSE"
-          CONTAINER_ID=""
-          fi
-          
-          echo "container_id=$CONTAINER_ID" >> $GITHUB_OUTPUT
-          echo "container_name=$CONTAINER_NAME" >> $GITHUB_OUTPUT
+        
 
       - name: Delete existing container
         if: steps.get_container.outputs.container_id != '' && steps.get_container.outputs.container_id != 'null'
@@ -108,18 +78,6 @@ jobs:
             -X DELETE "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/$CONTAINER_ID?force=true" \
             -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}")
 
-          HTTP_STATUS=$(echo $RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
-          BODY=$(echo $RESPONSE | sed -e 's/HTTPSTATUS:.*//g')
-
-          echo "HTTP Status: $HTTP_STATUS"
-          echo "Response: $BODY"
-
-          if [ $HTTP_STATUS -eq 204 ] || [ $HTTP_STATUS -eq 200 ]; then
-            echo "✅ Container deleted successfully"
-          else
-            echo "❌ Failed to delete container (Status: $HTTP_STATUS)"
-            # 컨테이너가 이미 없을 수도 있으니 계속 진행
-          fi
 
       - name: Pull latest image (with error handling)
         run: |
@@ -130,9 +88,7 @@ jobs:
           curl -s -X POST "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/images/create?fromImage=${REGISTRY_ENCODED}%2F${IMAGE_ENCODED}&tag=dev" \
           -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}" \
           -H "Referer: ${{ secrets.PORTAINERURL }}"
-
-          
-        
+    
 
       - name: Create new container
         run: |

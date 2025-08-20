@@ -44,6 +44,7 @@ public class JwtUtil {
             // 토큰 유효성 검사
             Date expiration = claims.getExpiration();
             if (expiration.before(new Date())) {
+                System.out.println("expried");
                 return new ResponseDTO(HttpStatus.UNAUTHORIZED,ErrorConst.EXPRIED_TOKEN.getCode(),ErrorConst.EXPRIED_TOKEN.getMessage());
             }
 
