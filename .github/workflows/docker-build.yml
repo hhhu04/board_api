@@ -60,8 +60,8 @@ jobs:
         id: get_container
         run: |
           CONTAINER_NAME="${{ github.event.repository.name }}"
-          CONTAINER_ID=$(curl -s "${{ secrets.PORTAINER_URL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/json?all=true" \
-            -H "X-API-KEY: ${{ secrets.PORTAINER_TOKEN }}" | \
+          CONTAINER_ID=$(curl -s "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/json?all=true" \
+            -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}" | \
             jq -r ".[] | select(.Names[] == \"/$CONTAINER_NAME\") | .Id")
           echo "container_id=$CONTAINER_ID" >> $GITHUB_OUTPUT
           echo "container_name=$CONTAINER_NAME" >> $GITHUB_OUTPUT
@@ -71,16 +71,16 @@ jobs:
         if: steps.get_container.outputs.container_id != 'null' && steps.get_container.outputs.container_id != ''
         run: |
           echo "Deleting existing container..."
-          curl -s -X DELETE "${{ secrets.PORTAINER_URL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/${{ steps.get_container.outputs.container_id }}?force=true" \
-            -H "X-API-KEY: ${{ secrets.PORTAINER_TOKEN }}"
+          curl -s -X DELETE "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/${{ steps.get_container.outputs.container_id }}?force=true" \
+            -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}"
 
       - name: Pull latest image (with error handling)
         run: |
           echo "Pulling latest image..."
           
           RESPONSE=$(curl -s -w "%{http_code}" \
-            -X POST "${{ secrets.PORTAINER_URL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/images/create" \
-            -H "X-API-KEY: ${{ secrets.PORTAINER_TOKEN }}" \
+            -X POST "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/images/create" \
+            -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{\"fromImage\": \"${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev\"}")
           
@@ -100,8 +100,8 @@ jobs:
       - name: Create new container
         run: |
           echo "Creating new container with image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev"
-          curl -s -X POST "${{ secrets.PORTAINER_URL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/create?name=${{ steps.get_container.outputs.container_name }}" \
-            -H "X-API-KEY: ${{ secrets.PORTAINER_TOKEN }}" \
+          curl -s -X POST "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/create?name=${{ steps.get_container.outputs.container_name }}" \
+            -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{
               \"Image\": \"${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev\",
@@ -119,6 +119,6 @@ jobs:
       - name: Start container
         run: |
           echo "Starting container..."
-          curl -s -X POST "${{ secrets.PORTAINER_URL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/${{ steps.get_container.outputs.container_name }}/start" \
-            -H "X-API-KEY: ${{ secrets.PORTAINER_TOKEN }}"
+          curl -s -X POST "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/${{ steps.get_container.outputs.container_name }}/start" \
+            -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}"
           echo "✅ Deployment completed!"
