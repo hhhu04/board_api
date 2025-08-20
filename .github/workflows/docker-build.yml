@@ -125,6 +125,12 @@ jobs:
         run: |
           echo "Pulling latest image..."
           
+          echo "${{ secrets.PORTAINERURL }}"
+          echo "${{ secrets.PORTAINERTOKEN }}"
+          echo "${{ env.REGISTRY }}"
+          echo "${{ env.IMAGE_NAME }}"
+          
+          
           RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" \
           -X POST "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/images/create" \
           -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}" \
