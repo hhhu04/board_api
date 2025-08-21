@@ -75,6 +75,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        log.info("{} {}", response.getStatus(), request.getRequestURI());
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 
