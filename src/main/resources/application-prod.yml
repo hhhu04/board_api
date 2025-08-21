@@ -1,0 +1,40 @@
+server:
+  port: 5000
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: board
+
+  datasource:
+    url: jdbc:mysql://${DBHOST}:${DBPORT}/${DB}
+    username: ${USERNAME}
+    password: ${DBPASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        show-sql: false
+        format_sql: false
+
+logging:
+  level:
+    root: INFO
+    com.project.board: INFO
+
+common:
+  jwt:
+    secret: ${JWTSECRET}
+    issuer: ${JWTISSUER}
+  neople:
+    base-url: https://api.neople.co.kr
+    dnf: ${DNF}
+    cyphers: ${CYPHERS}
